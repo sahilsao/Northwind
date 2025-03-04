@@ -17,11 +17,16 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseWebAssemblyDebugging();
 }
 
 app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+app.UseBlazorFrameworkFiles();
+app.MapFallbackToFile("index.html");
 
 app.MapControllers();
 
