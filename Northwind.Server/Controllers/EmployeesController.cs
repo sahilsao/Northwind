@@ -6,7 +6,7 @@ using Northwind.Server.Persistence;
 namespace Northwind.Server.Controllers;
 
 [ApiController, Route("api/employees")]
-public class EmployeeController(NorthwindDataContext northwindDataContext) : Controller
+public class EmployeesController(NorthwindDataContext northwindDataContext) : Controller
 {   
     [HttpGet("")]
     public async Task<ActionResult<List<Employees>>> GetAll()
