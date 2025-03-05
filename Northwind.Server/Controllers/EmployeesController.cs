@@ -1,24 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Northwind.Server.Domain;
+using Northwind.Server.Extensions;
 using Northwind.Server.Persistence;
+using Northwind.Shared.Constants;
+using Northwind.Shared.Employees;
 
 namespace Northwind.Server.Controllers;
 
-[ApiController, Route("api/employees")]
+[ApiController]
 public class EmployeesController(NorthwindDataContext northwindDataContext) : Controller
 {   
-    [HttpGet("")]
-    public async Task<ActionResult<List<Employees>>> GetAll()
+    [HttpGet(Routes.Api.Employees.GetAll)]
+    public async Task<ActionResult<List<EmployeesDto>>> GetAll()
     {
-        var employees = await northwindDataContext.Employees.ToListAsync();
+        var employees = await northwindDataContext.Employees
+        .ProjectToDtos()
+        .ToListAsync();
         return Ok(employees);
     }
     
-    [HttpGet("{id:int}")]
+    [HttpGet(Routes.Api.Employees.GetById)]
     public async Task<ActionResult<Employees?>> GetById(int id)
     {
-        var employee = await northwindDataContext.Employees.FindAsync(id);
+        var employee = await northwindDataContext.Employees
+        .ProjectToDtos()
+        .FirstOrDefaultAsync(x => x.EmployeeId == id);
 
         if (employee == null)
             return NotFound();
@@ -26,7 +33,7 @@ public class EmployeesController(NorthwindDataContext northwindDataContext) : Co
         return Ok(employee);
     }
     
-    [HttpPost("")]
+    [HttpPost(Routes.Api.Employees.Add)]
     public async Task<ActionResult> Add(Employees employee)
     {
         northwindDataContext.Employees.Add(employee);
@@ -35,7 +42,7 @@ public class EmployeesController(NorthwindDataContext northwindDataContext) : Co
         return Created();
     }
     
-    [HttpPut("")]
+    [HttpPut(Routes.Api.Employees.Update)]
     public async Task<ActionResult> Update(Employees updatedEmployee)
     {
         var existingEmployee = await northwindDataContext.Employees.FindAsync(updatedEmployee.EmployeeId);
@@ -52,7 +59,7 @@ public class EmployeesController(NorthwindDataContext northwindDataContext) : Co
         return Ok();
     }
     
-    [HttpDelete("{id:int}")]
+    [HttpDelete(Routes.Api.Employees.Delete)]
     public async Task<ActionResult> Delete(int id)
     {
         var existingEmployee = await northwindDataContext.Employees.FindAsync(id);
