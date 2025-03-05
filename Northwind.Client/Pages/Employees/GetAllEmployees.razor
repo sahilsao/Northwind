@@ -49,6 +49,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        // Simulate asynchronous loading to demonstrate a loading indicator
+        await Task.Delay(500);
+        
         if (_employees == null)
         {
             _employees = await httpClient.GetFromJsonAsync<List<EmployeesDto>>(Routes.Api.Employees.GetAll);
