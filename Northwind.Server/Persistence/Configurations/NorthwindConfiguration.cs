@@ -15,7 +15,13 @@ public class NorthwindConfiguration: IEntityTypeConfiguration<Employees>
         
         builder.Property(x => x.LastName)
             .IsRequired().HasMaxLength(20);
+
+        builder.Property(x => x.Title)
+            .IsRequired().HasMaxLength(30);    
         
+        builder.Property(x => x.BirthDate)
+            .IsRequired().HasMaxLength(30);    
+
         builder.ToTable("Employees");
     }
 }

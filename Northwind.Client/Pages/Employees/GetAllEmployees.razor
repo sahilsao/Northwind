@@ -27,11 +27,21 @@ else
                 <MudTableSortLabel SortBy="new Func<EmployeesDto, object>(x => x.LastName ?? string.Empty)">Last Name
                 </MudTableSortLabel>
             </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortBy="new Func<EmployeesDto, object>(x => x.Title ?? string.Empty)">Title
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortBy="new Func<EmployeesDto, object>(x => x.BirthDate)">Birth Date
+                </MudTableSortLabel>
+            </MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Employees Id">@context.EmployeeId</MudTd>
             <MudTd DataLabel="First Name">@context.FirstName</MudTd>
             <MudTd DataLabel="Last Name">@context.LastName</MudTd>
+            <MudTd DataLabel="Title">@context.Title</MudTd>
+            <MudTd DataLabel="Birth Date">@context.BirthDate.ToString("dd/MM/yyyy")</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />

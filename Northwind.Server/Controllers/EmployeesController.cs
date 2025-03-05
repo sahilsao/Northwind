@@ -50,10 +50,11 @@ public class EmployeesController(NorthwindDataContext northwindDataContext) : Co
         if (existingEmployee == null)
             return NotFound();
         
-        existingEmployee.Title = updatedEmployee.Title;
         existingEmployee.FirstName = updatedEmployee.FirstName;
         existingEmployee.LastName = updatedEmployee.LastName;
-
+        existingEmployee.Title = updatedEmployee.Title;
+        existingEmployee.BirthDate = updatedEmployee.BirthDate;
+        
         await northwindDataContext.SaveChangesAsync();
 
         return Ok();
