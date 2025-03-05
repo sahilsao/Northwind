@@ -25,7 +25,7 @@ public class Routes
 
         public static class Employees
         {
-            public const string Index = "/employees";
+            public const string GetAllEmployees = "/employees";
         }
     }
 }
