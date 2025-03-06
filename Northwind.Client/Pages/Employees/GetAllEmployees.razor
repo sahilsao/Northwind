@@ -51,21 +51,16 @@ else
 
 @code {
 
-
     private List<EmployeesDto>? _employees;
 
-    [Inject]
-    public HttpClient httpClient { get; set; } = null!;
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
         // Simulate asynchronous loading to demonstrate a loading indicator
-        await Task.Delay(500);
-        
-        if (_employees == null)
-        {
-            _employees = await httpClient.GetFromJsonAsync<List<EmployeesDto>>(Routes.Api.Employees.GetAll);
-        }
+        //await Task.Delay(500);
+
+        _employees ??= await HttpClient.GetFromJsonAsync<List<EmployeesDto>>(Routes.Api.Employees.GetAll);
     }
 
 }

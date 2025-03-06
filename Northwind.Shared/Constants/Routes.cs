@@ -1,6 +1,3 @@
-using System;
-using System.Net.NetworkInformation;
-
 namespace Northwind.Shared.Constants;
 
 public class Routes
@@ -25,7 +22,7 @@ public class Routes
 
         public static class Employees
         {
-            public const string GetAllEmployees = "/employees";
+            public const string GetAllEmployees = "/employees";           
         }
     }
 }
