@@ -1,5 +1,3 @@
-using System;
-
 namespace Northwind.Shared.Employees;
 
 public class EmployeesDto
