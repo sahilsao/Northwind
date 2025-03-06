@@ -1,6 +1,6 @@
 namespace Northwind.Shared.Constants;
 
-public class Routes
+public static class Routes
 {
     public static class Api
     {

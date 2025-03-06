@@ -31,7 +31,7 @@ cd Northwind
 Download Northwind DB: [click here](https://github.com/microsoft/sql-server-samples/tree/master/samples/databases/northwind-pubs)
 
 Restore Northwind DB in SQL Server: Use the instnwnd.sql script file and execute it on your SQL Server instance.
-Update the appsettings.json file with your SQL Server connection string.
+Update the appsettings.Development.json file with your SQL Server connection string.
 ```json
 {
   "ConnectionStrings": {
