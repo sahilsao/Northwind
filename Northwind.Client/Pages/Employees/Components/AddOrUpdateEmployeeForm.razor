@@ -1,0 +1,47 @@
+@using Northwind.Shared.Employees.Commands
+<EditForm Model="@Command">
+    <div class="row mb-3">
+        <div class="col-12">
+            <label>
+                First Name:
+                <InputText class="form-control" @bind-Value="Command.FirstName"></InputText>
+            </label>
+            <ValidationMessage For="()=>Command.FirstName" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <label>
+                Last Name:
+                <InputText class="form-control" @bind-Value="Command.LastName"></InputText>
+            </label>
+            <ValidationMessage For="()=>Command.LastName" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <label>
+                Title:
+                <InputText class="form-control" @bind-Value="Command.Title"></InputText>
+            </label>
+            <ValidationMessage For="()=>Command.Title" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <label>
+                Birth Date:
+                <MudDatePicker Label="Read only" @bind-Value="Command.BirthDate" @bind-Date="_birthdate" ReadOnly="true"/>
+            </label>
+            <ValidationMessage For="()=>Command.BirthDate" />
+        </div>
+    </div>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</MudButton>
+</EditForm>
+
+@code {
+    private DateTime? _birthdate = DateTime.Today;
+    
+    [Parameter, EditorRequired]
+    public AddOrUpdateEmployeeCommand Command { get; set; } = null!;
+}

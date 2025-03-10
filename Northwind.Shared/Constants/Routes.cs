@@ -22,7 +22,9 @@ public static class Routes
 
         public static class Employees
         {
-            public const string GetAllEmployees = "/employees";           
+            public const string GetAllEmployees = "/employees";    
+            public const string Add = "/employees/add";
+            public const string Edit = "/employees/edit/{id:int}";
         }
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Northwind.Server.Domain;
+using Northwind.Shared.Constants;
 
 namespace Northwind.Server.Persistence.Configurations;
 
@@ -11,16 +12,18 @@ public class NorthwindConfiguration: IEntityTypeConfiguration<Employees>
         builder.HasKey(x => x.EmployeeId);
         
         builder.Property(x => x.FirstName)
-            .IsRequired().HasMaxLength(20);
+            .IsRequired().HasMaxLength(MaxLengths.Employees.FirstName);
         
         builder.Property(x => x.LastName)
-            .IsRequired().HasMaxLength(20);
+            .IsRequired().HasMaxLength(MaxLengths.Employees.LastName);
 
         builder.Property(x => x.Title)
-            .IsRequired().HasMaxLength(30);    
+            .IsRequired().HasMaxLength(MaxLengths.Employees.Title);    
         
         builder.Property(x => x.BirthDate)
-            .IsRequired().HasMaxLength(30);    
+            .IsRequired()
+            .HasConversion<DateTime>()
+            .HasColumnType("datetime");
 
         builder.ToTable("Employees");
     }

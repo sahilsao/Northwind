@@ -1,5 +1,7 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Northwind.Server.Persistence;
+using Northwind.Shared.Employees.Validators;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<NorthwindDataContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("NorthwindCS"));
 });
+builder.Services.AddValidatorsFromAssemblyContaining<AddOrUpdateEmployeeValidator>();
 
 var app = builder.Build();
 

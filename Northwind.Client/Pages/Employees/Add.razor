@@ -1,0 +1,13 @@
+@using Northwind.Client.Pages.Employees.Components
+@using Northwind.Shared.Employees.Commands
+@attribute [Route(Routes.Pages.Employees.Add)]
+
+<PageTitle>Add Employees</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Add Employees</MudText>
+
+<AddOrUpdateEmployeeForm Command="new AddOrUpdateEmployeeCommand()" />
+
+@code {
+    
+}

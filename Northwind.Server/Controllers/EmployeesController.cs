@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Northwind.Server.Domain;
 using Northwind.Server.Extensions;
 using Northwind.Server.Persistence;
 using Northwind.Shared.Constants;
 using Northwind.Shared.Employees;
+using Northwind.Shared.Employees.Commands;
 
 namespace Northwind.Server.Controllers;
 
@@ -21,7 +21,7 @@ public class EmployeesController(NorthwindDataContext northwindDataContext) : Co
     }
     
     [HttpGet(Routes.Api.Employees.GetById)]
-    public async Task<ActionResult<Employees?>> GetById(int id)
+    public async Task<ActionResult<EmployeesDto?>> GetById(int id)
     {
         var employee = await northwindDataContext.Employees
         .ProjectToDtos()
@@ -34,8 +34,10 @@ public class EmployeesController(NorthwindDataContext northwindDataContext) : Co
     }
     
     [HttpPost(Routes.Api.Employees.Add)]
-    public async Task<ActionResult> Add(Employees employee)
+    public async Task<ActionResult> Add(AddOrUpdateEmployeeCommand command)
     {
+        var employee = command.MapToNewEmployee();
+        
         northwindDataContext.Employees.Add(employee);
         await northwindDataContext.SaveChangesAsync();
 
@@ -43,17 +45,14 @@ public class EmployeesController(NorthwindDataContext northwindDataContext) : Co
     }
     
     [HttpPut(Routes.Api.Employees.Update)]
-    public async Task<ActionResult> Update(Employees updatedEmployee)
+    public async Task<ActionResult> Update(AddOrUpdateEmployeeCommand command)
     {
-        var existingEmployee = await northwindDataContext.Employees.FindAsync(updatedEmployee.EmployeeId);
+        var existingEmployee = await northwindDataContext.Employees.FindAsync(command.EmployeeId);
 
         if (existingEmployee == null)
             return NotFound();
         
-        existingEmployee.FirstName = updatedEmployee.FirstName;
-        existingEmployee.LastName = updatedEmployee.LastName;
-        existingEmployee.Title = updatedEmployee.Title;
-        existingEmployee.BirthDate = updatedEmployee.BirthDate;
+        command.MapToExistingEmployee(existingEmployee);
         
         await northwindDataContext.SaveChangesAsync();
 

@@ -1,0 +1,34 @@
+@using Northwind.Client.Pages.Employees.Components
+@using Northwind.Shared.Employees
+@using Northwind.Shared.Employees.Commands
+@attribute [Route(Routes.Pages.Employees.Edit)]
+
+<PageTitle>Edit Employees</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Edit Employees</MudText>
+
+<AddOrUpdateEmployeeForm Command="new AddOrUpdateEmployeeCommand()" />
+
+@code {
+    [Parameter]
+    public int EmployeeId { get; set; }
+    [Inject]
+    public HttpClient HttpClient { get; set; } = null!;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var employee = await HttpClient.GetFromJsonAsync<EmployeesDto>($"api/employees/{EmployeeId}");
+        if (employee != null)
+        {
+            // Set the command properties
+            // Command = new AddOrUpdateEmployeeCommand
+            // {
+            //     FirstName = employee.FirstName,
+            //     LastName = employee.LastName,
+            //     Title = employee.Title,
+            //     BirthDate = employee.BirthDate
+            // };
+        }
+    }
+    
+}
