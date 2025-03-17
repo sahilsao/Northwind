@@ -1,3 +1,4 @@
+@using Northwind.Client.Extensions
 @using Northwind.Client.Pages.Employees.Components
 @using Northwind.Shared.Employees
 @using Northwind.Shared.Employees.Commands
@@ -7,28 +8,34 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Edit Employees</MudText>
 
+@if (_command == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <AddOrUpdateEmployeeForm Command="_command" />
+}
+
 <AddOrUpdateEmployeeForm Command="new AddOrUpdateEmployeeCommand()" />
 
 @code {
+    private AddOrUpdateEmployeeCommand? _command;
+
     [Parameter]
     public int EmployeeId { get; set; }
+    
     [Inject]
     public HttpClient HttpClient { get; set; } = null!;
     
     protected override async Task OnInitializedAsync()
     {
-        var employee = await HttpClient.GetFromJsonAsync<EmployeesDto>($"api/employees/{EmployeeId}");
-        if (employee != null)
-        {
-            // Set the command properties
-            // Command = new AddOrUpdateEmployeeCommand
-            // {
-            //     FirstName = employee.FirstName,
-            //     LastName = employee.LastName,
-            //     Title = employee.Title,
-            //     BirthDate = employee.BirthDate
-            // };
-        }
-    }
-    
-}
+        var route = Routes.Api.Employees.GetById.Format(EmployeeId);
+        var employee = await HttpClient.GetFromJsonAsync<EmployeesDto>(route);
+        if (employee == null)
+            return;     
+
+        _command = employee.MapToCommand();           
+    }    
+}    
+

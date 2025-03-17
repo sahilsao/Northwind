@@ -1,5 +1,6 @@
 @using Northwind.Shared.Employees.Commands
 <EditForm Model="@Command">
+    <FluentValidationValidator/>
     <div class="row mb-3">
         <div class="col-12">
             <label>
@@ -31,7 +32,7 @@
         <div class="col-12">
             <label>
                 Birth Date:
-                <MudDatePicker Label="Read only" @bind-Value="Command.BirthDate" @bind-Date="_birthdate" ReadOnly="true"/>
+                <MudDatePicker Label="Read only" @bind-Value="Command.BirthDate" @bind-Date="_birthdate"/>
             </label>
             <ValidationMessage For="()=>Command.BirthDate" />
         </div>
