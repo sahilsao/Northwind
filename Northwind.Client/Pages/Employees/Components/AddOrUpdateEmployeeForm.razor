@@ -1,48 +1,66 @@
 @using Northwind.Shared.Employees.Commands
-<EditForm Model="@Command">
+<EditForm Model="@Command" OnValidSubmit="OnValidSubmitAsync">
     <FluentValidationValidator/>
-    <div class="row mb-3">
-        <div class="col-12">
-            <label>
-                First Name:
-                <InputText class="form-control" @bind-Value="Command.FirstName"></InputText>
-            </label>
-            <ValidationMessage For="()=>Command.FirstName" />
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-12">
-            <label>
-                Last Name:
-                <InputText class="form-control" @bind-Value="Command.LastName"></InputText>
-            </label>
-            <ValidationMessage For="()=>Command.LastName" />
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-12">
-            <label>
-                Title:
-                <InputText class="form-control" @bind-Value="Command.Title"></InputText>
-            </label>
-            <ValidationMessage For="()=>Command.Title" />
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-12">
-            <label>
-                Birth Date:
-                <MudDatePicker Label="Read only" @bind-Value="Command.BirthDate" @bind-Date="_birthdate"/>
-            </label>
-            <ValidationMessage For="()=>Command.BirthDate" />
-        </div>
-    </div>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Submit</MudButton>
+
+    <MudGrid>
+
+        <!-- First Name Row -->
+        <MudItem xs="12">
+            <MudTextField Label="First Name" @bind-Value="Command.FirstName"/>
+            <ValidationMessage For="() => Command.FirstName"/>
+        </MudItem>
+
+        <!-- Last Name Row -->
+        <MudItem xs="12">
+            <MudTextField Label="Last Name" @bind-Value="Command.LastName"/>
+            <ValidationMessage For="() => Command.LastName"/>
+        </MudItem>
+
+        <!-- Title Row -->
+        <MudItem xs="12">
+            <MudTextField Label="Title" @bind-Value="Command.Title"/>
+            <ValidationMessage For="() => Command.Title"/>
+        </MudItem>
+
+        <!-- Birth Date Row -->
+        <MudItem xs="12">
+            <MudDatePicker Label="Birth Date" @bind-Value="Command.BirthDate"
+                           PickerVariant="PickerVariant.Dialog" DateFormat="dd/MM/yyyy"/>
+            <ValidationMessage For="() => Command.BirthDate"/>
+        </MudItem>
+    
+        <!-- Submit Button -->
+        <MudItem xs="4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">Submit
+            </MudButton>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Error" Href="@Routes.Pages.Employees.GetAllEmployees">Cancel
+            </MudButton>
+        </MudItem>
+    </MudGrid>
 </EditForm>
 
+
 @code {
-    private DateTime? _birthdate = DateTime.Today;
-    
-    [Parameter, EditorRequired]
-    public AddOrUpdateEmployeeCommand Command { get; set; } = null!;
+
+    [Parameter, EditorRequired] public AddOrUpdateEmployeeCommand Command { get; set; } = null!;
+    private bool IsEditingExistingBlog => Command.EmployeeId > 0;
+
+    [Inject] public HttpClient HttpClient { get; set; } = null!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = null!;
+
+    private async Task OnValidSubmitAsync()
+    {
+        HttpResponseMessage response;
+
+        if (IsEditingExistingBlog)
+            response = await HttpClient.PutAsJsonAsync(Routes.Api.Employees.Update, Command);
+        else
+            response = await HttpClient.PostAsJsonAsync(Routes.Api.Employees.Add, Command);
+
+        if (response.IsSuccessStatusCode)
+            NavigationManager.NavigateTo(Routes.Pages.Employees.GetAllEmployees);
+    }
+
+
 }
