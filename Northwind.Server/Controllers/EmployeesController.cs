@@ -36,48 +36,29 @@ public class EmployeesController(NorthwindDataContext northwindDataContext) : Co
     [HttpPost(Routes.Api.Employees.Add)]
     public async Task<ActionResult> Add(AddOrUpdateEmployeeCommand command)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var employee = command.MapToNewEmployee();
 
         // Ensure EmployeeId is not set
         employee.EmployeeId = 0;
 
-        try
-        {
-            northwindDataContext.Employees.Add(employee);
-            await northwindDataContext.SaveChangesAsync();
-        }
-        catch (DbUpdateException ex)
-        {
-            // Log the exception (not shown here)
-            return StatusCode(500, "An error occurred while saving the employee.");
-        }
+
+        northwindDataContext.Employees.Add(employee);
+        await northwindDataContext.SaveChangesAsync();
+
         return Created();
     }
 
     [HttpPut(Routes.Api.Employees.Update)]
     public async Task<ActionResult> Update(AddOrUpdateEmployeeCommand command)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var existingEmployee = await northwindDataContext.Employees.FindAsync(command.EmployeeId);
 
         if (existingEmployee == null)
             return NotFound();
 
         command.MapToExistingEmployee(existingEmployee);
-        try
-        {
-            await northwindDataContext.SaveChangesAsync();
-        }
-        catch (DbUpdateException ex)
-        {
-            // Log the exception (not shown here)
-            return StatusCode(500, "An error occurred while updating the employee.");
-        }
+
+        await northwindDataContext.SaveChangesAsync();
 
         return Ok();
     }
