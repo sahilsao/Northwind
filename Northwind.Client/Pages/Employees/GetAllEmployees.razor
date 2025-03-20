@@ -9,58 +9,69 @@
 
 @if (_employees == null)
 {
-    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+	<MudProgressCircular Color="Color.Default" Indeterminate="true" />
 }
 else
 {
-    <MudTable Items="@_employees" Hover="true" SortLabel="Sort By" Elevation="0" AllowUnsorted="false">
-        <HeaderContent>
-            <MudTh>
-                <MudTableSortLabel InitialDirection="SortDirection.Ascending"
-                    SortBy="new Func<EmployeesDto, object>(x => x.EmployeeId)">Employees Id</MudTableSortLabel>
-            </MudTh>
-            <MudTh>
-                <MudTableSortLabel SortBy="new Func<EmployeesDto, object>(x => x.FirstName ?? string.Empty)">First Name
-                </MudTableSortLabel>
-            </MudTh>
-            <MudTh>
-                <MudTableSortLabel SortBy="new Func<EmployeesDto, object>(x => x.LastName ?? string.Empty)">Last Name
-                </MudTableSortLabel>
-            </MudTh>
-            <MudTh>
-                <MudTableSortLabel SortBy="new Func<EmployeesDto, object>(x => x.Title ?? string.Empty)">Title
-                </MudTableSortLabel>
-            </MudTh>
-            <MudTh>
-                <MudTableSortLabel SortBy="new Func<EmployeesDto, object>(x => x.BirthDate)">Birth Date
-                </MudTableSortLabel>
-            </MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Employees Id">@context.EmployeeId</MudTd>
-            <MudTd DataLabel="First Name">@context.FirstName</MudTd>
-            <MudTd DataLabel="Last Name">@context.LastName</MudTd>
-            <MudTd DataLabel="Title">@context.Title</MudTd>
-            <MudTd DataLabel="Birth Date">@context.BirthDate.ToString("dd/MM/yyyy")</MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
-        </PagerContent>
-    </MudTable>
+	<MudButton Href="@Routes.Pages.Employees.Add" Color="Color.Success" Variant="Variant.Filled">Add Employees</MudButton>
+
+	<MudTable Items="@_employees" Hover="true" SortLabel="Sort By" Elevation="0" AllowUnsorted="false">
+		<HeaderContent>
+			<MudTh>
+				<MudTableSortLabel InitialDirection="SortDirection.Ascending"
+								   SortBy="new Func<EmployeesDto, object>(x => x.EmployeeId)">Employees Id</MudTableSortLabel>
+			</MudTh>
+			<MudTh>
+				<MudTableSortLabel SortBy="new Func<EmployeesDto, object>(x => x.FirstName ?? string.Empty)">
+					First Name
+				</MudTableSortLabel>
+			</MudTh>
+			<MudTh>
+				<MudTableSortLabel SortBy="new Func<EmployeesDto, object>(x => x.LastName ?? string.Empty)">
+					Last Name
+				</MudTableSortLabel>
+			</MudTh>
+			<MudTh>
+				<MudTableSortLabel SortBy="new Func<EmployeesDto, object>(x => x.Title ?? string.Empty)">
+					Title
+				</MudTableSortLabel>
+			</MudTh>
+			<MudTh>
+
+			</MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Employees Id">@context.EmployeeId</MudTd>
+			<MudTd DataLabel="First Name">@context.FirstName</MudTd>
+			<MudTd DataLabel="Last Name">@context.LastName</MudTd>
+			<MudTd DataLabel="Title">@context.Title</MudTd>
+			<MudTd><MudButton OnClick="@(() => GoToEditPage(context))"></MudButton>Edit</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager PageSizeOptions="new int[] { 50, 100 }" />
+		</PagerContent>
+	</MudTable>
 }
 
 @code {
 
-    private List<EmployeesDto>? _employees;
+	private List<EmployeesDto>? _employees;
 
-    [Inject] public HttpClient HttpClient { get; set; } = null!;
+	[Inject] public HttpClient HttpClient { get; set; } = null!;
+	[Inject] public NavigationManager NavigationManager { get; set; } = null!;
 
-    protected override async Task OnInitializedAsync()
-    {
-        // Simulate asynchronous loading to demonstrate a loading indicator
-        //await Task.Delay(500);
+	protected override async Task OnInitializedAsync()
+	{
+		// Simulate asynchronous loading to demonstrate a loading indicator
+		//await Task.Delay(500);
 
-        _employees ??= await HttpClient.GetFromJsonAsync<List<EmployeesDto>>(Routes.Api.Employees.GetAll);
-    }
+		_employees ??= await HttpClient.GetFromJsonAsync<List<EmployeesDto>>(Routes.Api.Employees.GetAll);
+	}
+
+	private void GoToEditPage(EmployeesDto employees)
+	{
+		var route = Routes.Pages.Employees.Edit.Format(employees.EmployeeId);
+		NavigationManager.NavigateTo(route);
+	}
 
 }

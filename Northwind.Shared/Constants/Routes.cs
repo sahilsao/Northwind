@@ -32,6 +32,7 @@ public static partial class Routes
 
         public static class Employees
         {
+            public const string GetAPIDocumentation = "/scalar/v1";
             public const string GetAllEmployees = "/employees";    
             public const string Add = "/employees/add";
             public const string Edit = "/employees/edit/{id:int}";

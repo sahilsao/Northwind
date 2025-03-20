@@ -19,11 +19,6 @@ public class NorthwindConfiguration: IEntityTypeConfiguration<Employees>
 
         builder.Property(x => x.Title)
             .IsRequired().HasMaxLength(MaxLengths.Employees.Title);    
-        
-        builder.Property(x => x.BirthDate)
-            .IsRequired()
-            .HasConversion<DateTime>()
-            .HasColumnType("datetime");
 
         builder.ToTable("Employees");
     }

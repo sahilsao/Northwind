@@ -22,10 +22,5 @@ public class AddOrUpdateEmployeeValidator : AbstractValidator<AddOrUpdateEmploye
             .WithMessage("The title is required")
             .MaximumLength(MaxLengths.Employees.Title)
             .WithMessage("The title must be less than {MaxLength} characters");
-        
-        RuleFor(x => x.BirthDate).NotEmpty()
-            .WithMessage("The birth date is required.")
-            .Must(date => date <= DateTime.Now)
-            .WithMessage("The birth date cannot be in the future.");
     }
 }
